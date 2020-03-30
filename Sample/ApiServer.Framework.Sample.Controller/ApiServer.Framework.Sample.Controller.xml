@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ApiServer.Framework.Sample.Controller</name>
+    </assembly>
+    <members>
+        <member name="T:ApiServer.Framework.Sample.Controller.AuthController">
+            <summary>
+            授权controller
+            </summary>
+        </member>
+        <member name="P:ApiServer.Framework.Sample.Controller.AuthController.UserService">
+            <summary>
+            用户server
+            </summary>
+        </member>
+        <member name="P:ApiServer.Framework.Sample.Controller.AuthController.JWTSetting">
+            <summary>
+            jwt配置文件
+            </summary>
+        </member>
+        <member name="M:ApiServer.Framework.Sample.Controller.AuthController.LoginByPwd(ApiServer.Framework.Sample.Dto.LoginByPwdReq)">
+            <summary>
+            密码登录
+            </summary>
+            <returns>The by pwd.</returns>
+            <param name="req">req.</param>
+        </member>
+    </members>
+</doc>

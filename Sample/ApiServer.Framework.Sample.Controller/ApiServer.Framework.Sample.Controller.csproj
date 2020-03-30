@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>D:\sources\ApiServer.FrameWork\Sample\ApiServer.Framework.Sample.Controller\ApiServer.Framework.Sample.Controller.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ApiServer.Framework.Core\ApiServer.Framework.Core.csproj" />
+    <ProjectReference Include="..\ApiServer.Framework.Sample.Dto\ApiServer.Framework.Sample.Dto.csproj" />
+    <ProjectReference Include="..\ApiServer.Framework.Sample.Entity\ApiServer.Framework.Sample.Entity.csproj" />
+    <ProjectReference Include="..\ApiServer.Framework.Sample.Service\ApiServer.Framework.Sample.Service.csproj" />
+  </ItemGroup>
+
+</Project>

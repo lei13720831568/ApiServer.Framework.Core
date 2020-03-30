@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.UnitOfWork" Version="3.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ApiServer.Framework.Core\ApiServer.Framework.Core.csproj" />
+    <ProjectReference Include="..\ApiServer.Framework.Sample.Dto\ApiServer.Framework.Sample.Dto.csproj" />
+    <ProjectReference Include="..\ApiServer.Framework.Sample.Entity\ApiServer.Framework.Sample.Entity.csproj" />
+  </ItemGroup>
+
+</Project>

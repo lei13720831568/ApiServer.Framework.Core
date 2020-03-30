@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ApiServer.Framework.Sample.Dto</name>
+    </assembly>
+    <members>
+        <member name="T:ApiServer.Framework.Sample.Dto.LoginByPwdReq">
+            <summary>
+            密码登录
+            </summary>
+        </member>
+        <member name="P:ApiServer.Framework.Sample.Dto.LoginByPwdReq.Account">
+            <summary>
+            账号
+            </summary>
+            <value>The account.</value>
+        </member>
+        <member name="P:ApiServer.Framework.Sample.Dto.LoginByPwdReq.Password">
+            <summary>
+            密码
+            </summary>
+            <value>The password.</value>
+        </member>
+        <member name="T:ApiServer.Framework.Sample.Dto.LoginInfo">
+            <summary>
+            登录信息
+            </summary>
+        </member>
+        <member name="P:ApiServer.Framework.Sample.Dto.LoginInfo.jwt">
+            <summary>
+            jwt 字符串
+            </summary>
+        </member>
+    </members>
+</doc>

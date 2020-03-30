@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>D:\sources\ApiServer.FrameWork\Sample\ApiServer.Framework.Sample.Dto\ApiServer.Framework.Sample.Dto.xml</DocumentationFile>
+  </PropertyGroup>
+
+</Project>

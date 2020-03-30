@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="5.1.2" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="6.0.0" />
+    <PackageReference Include="NLog" Version="4.7.0" />
+    <PackageReference Include="NLog.Config" Version="4.7.0" />
+    <PackageReference Include="NLog.Schema" Version="4.7.0" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.9.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.2.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.2.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="5.2.1" />
+    <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="5.2.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\ApiServer.Framework.Core\ApiServer.Framework.Core.csproj" />
+    <ProjectReference Include="..\ApiServer.Framework.Sample.Controller\ApiServer.Framework.Sample.Controller.csproj" />
+    <ProjectReference Include="..\ApiServer.Framework.Sample.Dto\ApiServer.Framework.Sample.Dto.csproj" />
+    <ProjectReference Include="..\ApiServer.Framework.Sample.Entity\ApiServer.Framework.Sample.Entity.csproj" />
+    <ProjectReference Include="..\ApiServer.Framework.Sample.Service\ApiServer.Framework.Sample.Service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="C:\Users\lei\.nuget\packages\nlog.schema\4.7.0\contentFiles\any\any\NLog.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
+</Project>
