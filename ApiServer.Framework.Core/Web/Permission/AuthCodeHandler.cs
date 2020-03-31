@@ -16,18 +16,15 @@ namespace ApiServer.Framework.Core.Web.Permission
     {
         private readonly ILogger _logger;
 
-        private readonly ICurrentUserProvider _currentUserProvider;
         private readonly IUserResourceProvider _userResourceProvider;
 
         /// <summary>
         /// 构造
         /// </summary>
-        /// <param name="currentUserProvider"></param>
         /// <param name="userResourceProvider"></param>
         /// <param name="logger"></param>
-        public AuthCodeHandler(ICurrentUserProvider currentUserProvider,IUserResourceProvider userResourceProvider, NLog.ILogger logger)
+        public AuthCodeHandler(IUserResourceProvider userResourceProvider, NLog.ILogger logger)
         {
-            this._currentUserProvider = currentUserProvider;
             this._userResourceProvider = userResourceProvider;
             this._logger = logger;
         }
@@ -42,7 +39,7 @@ namespace ApiServer.Framework.Core.Web.Permission
         {
             try
             {
-                var userId = this._currentUserProvider.GetId();
+                var userId = context.User.Identity.Name;
                 if (userId != null)
                 {
                     //查询用户资源列表

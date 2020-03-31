@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace ApiServer.Framework.Sample.Service
 {
-    public class UserService: IUserResourceProvider
+    public class UserService: IUserResourceProvider, IDependency
     {
         public IUnitOfWork Uow { get; set; }
 
@@ -36,7 +36,7 @@ namespace ApiServer.Framework.Sample.Service
             string inputPwdMd5 = dto.Password.Md5();
             User user = Uow.GetRepository<User>().GetFirstOrDefault(
                predicate: w => w.Account == dto.Account
-                           && w.Password == inputPwdMd5,
+                           && w.Password == inputPwdMd5.ToLower(),
                include: p => p.Include(b => b.UserRoles).ThenInclude(a => a.Role)
                );
             if (user == null)

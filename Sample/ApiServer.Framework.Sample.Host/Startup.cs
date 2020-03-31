@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Unicode;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 using ApiServer.Framework.Core.AutofacExtras;
 using ApiServer.Framework.Core.Json;
 using ApiServer.Framework.Core.Settings;
+using ApiServer.Framework.Core.Web.JWT;
 using ApiServer.Framework.Core.Web.Middleware;
 using ApiServer.Framework.Core.Web.Permission;
 using ApiServer.Framework.Sample.Entity.Models;
@@ -16,6 +18,7 @@ using ApiServer.Framework.Sample.Service;
 using Arch.EntityFrameworkCore.UnitOfWork;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -27,10 +30,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.Swagger;
+using Microsoft.IdentityModel.Tokens;
+using NSwag;
+using NSwag.Generation.Processors.Security;
 
-namespace ApiServer.Framework.Sample.Host
+namespace ApiServer.Framework.Sample.App
+
 {
     public class Startup
     {
@@ -45,19 +50,43 @@ namespace ApiServer.Framework.Sample.Host
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             //配置参数注入
             services.AddOptions();
             services.Configure<ServerSettings>(Configuration.GetSection("ServerSettings"));
             services.Configure<JWTSettings>(Configuration.GetSection("JWT"));
-
             var settings = Configuration.GetSection("ServerSettings").Get<ServerSettings>();
+            var jwtSettings = Configuration.GetSection("JWT").Get<JWTSettings>();
+
+            services.AddSingleton<JwtHelpers>();
+
+            services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.IncludeErrorDetails = false;
+
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        //赋值 User.Identity.Name
+                        NameClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier",
+                        ValidateIssuer = true,
+                        ValidIssuer = jwtSettings.Issuer,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecurityKey))
+                    };
+
+                    options.SecurityTokenValidators.Clear();
+                    options.SecurityTokenValidators.Add(new JWTValidator());
+                });
+
+
+           
             //注入http上下文
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            //注入当前用户提供者
-            services.AddScoped<ICurrentUserProvider, JWTCurrentUserProvider>();
             //注入用户资源获取服务
             services.AddScoped<IUserResourceProvider, UserService>();
 
@@ -129,38 +158,35 @@ namespace ApiServer.Framework.Sample.Host
             }
 
             //配置swagger
-            services.AddSwaggerGen(c =>
-            {
-                c.SwaggerDoc("v1", new OpenApiInfo{ Title = "API", Version = "v1" });
-                var security = new Dictionary<string, IEnumerable<string>>
+            services.AddOpenApiDocument(config => {
+                config.Version = "1.0.0";
+                config.Title = "api文档";
+                config.Description = "api文档描述";
+                config.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme
                 {
-                    {"Bearer", new string[] { }},
-                };
-                foreach (var assembly in assemblies)
-                {
-                    try
-                    {
-                        //加载xml
-                        c.IncludeXmlComments(assembly.Location.Replace(".dll", ".xml"));
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.Warn($"加载程序集xml文件失败:{ex.Message}");
-                    }
-                }
-            });
+                    Type = OpenApiSecuritySchemeType.ApiKey,
+                    Name = "Authorization",
+                    In = OpenApiSecurityApiKeyLocation.Header,
+                    Description = "Type into the textbox: Bearer {your JWT token}."
+                });
+                config.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
+            }); //注册Swagger 服务
 
             services.AddMvc(options => options.EnableEndpointRouting = false);
 
-            //使用autofac替换容器管理，并注册所有类型
-            var builder = new ContainerBuilder();
-            AutoModule qm = new AutoModule(assemblies);
-            builder.RegisterModule(qm);
-            builder.Populate(services);
-            var applicationContainer = builder.Build();
-            return new AutofacServiceProvider(applicationContainer);
-
         }
+
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            //查找并加载动态组件
+            List<Assembly> assemblies = AutoModule.FindAssemblys("ApiServer.Framework.Sample.");
+
+            AutoModule qm = new AutoModule(assemblies);
+            //添加依赖注入关系
+            builder.RegisterModule(qm);
+            var controllerBaseType = typeof(ControllerBase);
+        }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -178,12 +204,12 @@ namespace ApiServer.Framework.Sample.Host
             app.UseMiddleware<GlobalExceptionMiddleware>();
             app.UseAuthentication();
             app.UseSession();
-            app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "API V1");
-                c.RoutePrefix = "doc";
-            });
+            app.UseOpenApi();
+            //app.UseReDoc(config=> {
+            //    config.Path = "/doc";
+            //});
+
+            app.UseSwaggerUi3();
 
             app.UseHttpsRedirection();
             app.UseMvc();

@@ -2,12 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NLog.Web;
-namespace ApiServer.Framework.Sample.Host
+namespace ApiServer.Framework.Sample.App
 {
     public class Program
     {
@@ -16,9 +18,16 @@ namespace ApiServer.Framework.Sample.Host
             CreateHostBuilder(args).Build().Run();
         }
 
-        public static IWebHostBuilder CreateHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseNLog()
-                .UseStartup<Startup>();
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return Host.CreateDefaultBuilder(args).UseServiceProviderFactory(new AutofacServiceProviderFactory())
+            .UseNLog()
+            .ConfigureWebHostDefaults(webHostBuilder =>
+            {
+                webHostBuilder.UseStartup<Startup>();
+            });
+        }
+        
+
     }
 }
