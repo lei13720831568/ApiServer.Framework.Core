@@ -123,7 +123,10 @@ namespace ApiServer.Framework.Sample.App
             #endif
 
             //ÆôÓÃsession
-            services.AddSession();
+            services.AddSession(options=> {
+                options.IdleTimeout = TimeSpan.FromMinutes(30);
+                options.Cookie.HttpOnly = true;
+            });
             services.Configure<CookiePolicyOptions>(options =>
             {
                 // This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -202,8 +205,8 @@ namespace ApiServer.Framework.Sample.App
             }
             
             app.UseMiddleware<GlobalExceptionMiddleware>();
-            app.UseAuthentication();
             app.UseSession();
+            app.UseAuthentication();
             app.UseOpenApi();
             //app.UseReDoc(config=> {
             //    config.Path = "/doc";
