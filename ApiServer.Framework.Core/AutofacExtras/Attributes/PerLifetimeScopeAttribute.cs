@@ -1,4 +1,5 @@
 ﻿using Autofac.Builder;
+using NLog;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -18,6 +19,7 @@ namespace ApiServer.Framework.Core.AutofacExtras.Attributes
         {
         }
 
+        public NLog.ILogger logger = LogManager.GetCurrentClassLogger();
         /// <summary>
         /// 生命周期设置
         /// </summary>

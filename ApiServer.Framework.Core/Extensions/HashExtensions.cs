@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ApiServer.Framework.Core.Algorithm;
+using System;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
@@ -106,6 +107,11 @@ namespace ApiServer.Framework.Core
             return Convert.ToBase64String(Encoding.UTF8.GetBytes(input));
         }
 
+        public static string Base64(this byte[] input)
+        {
+            return Convert.ToBase64String(input);
+        }
+
         /// <summary>
         /// md5
         /// </summary>
@@ -117,8 +123,20 @@ namespace ApiServer.Framework.Core
             {
                 var result = md5.ComputeHash(Encoding.ASCII.GetBytes(input));
                 var strResult = BitConverter.ToString(result);
-                return strResult.Replace("-", "");
+                return strResult.Replace("-", "").ToLower();
             }
+        }
+
+        /// <summary>
+        /// sm3
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        public static string SM3(this string input) {
+            using var sm3 = SM3Algorithm.Create();
+            var result = sm3.ComputeHash(Encoding.ASCII.GetBytes(input));
+            var strResult = BitConverter.ToString(result).ToLower();
+            return strResult.Replace("-", "");
         }
     }
 }

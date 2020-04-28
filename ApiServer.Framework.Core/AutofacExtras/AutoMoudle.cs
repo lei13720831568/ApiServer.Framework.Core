@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Autofac.Core.Registration;
 using Microsoft.Extensions.DependencyModel;
 using System.Runtime.Loader;
+using System.Runtime.CompilerServices;
 
 namespace ApiServer.Framework.Core.AutofacExtras
 {
@@ -37,6 +38,8 @@ namespace ApiServer.Framework.Core.AutofacExtras
                 propToSet.SetValue(instance, LogManager.GetLogger(instanceType.FullName), null);
             }
         }
+
+        public NLog.ILogger logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// 预置NLog的logger name
@@ -80,6 +83,7 @@ namespace ApiServer.Framework.Core.AutofacExtras
             var customAttr = type.GetCustomAttribute<T>();
             if (customAttr != null)
             {
+                logger.Debug($"RegisterTypeByAttribute IDependency :{type.Name}");
                 customAttr.SetLifeTime(builder.RegisterType(type).AsSelf().AsImplementedInterfaces()).PropertiesAutowired();
                 return true;
             }
@@ -103,12 +107,17 @@ namespace ApiServer.Framework.Core.AutofacExtras
             var list = new List<Assembly>();
             var deps = DependencyContext.Default;
 
-            var libs = deps.CompileLibraries.Where(lib => !lib.Serviceable && lib.Type != "package" && !lib.Name.StartsWith("Microsoft") && includeAssemblyNamePrefixs.Where(p => lib.Name.StartsWith(p)).Any());
+            var libs = deps.CompileLibraries.Where(lib => !lib.Serviceable 
+            && lib.Type != "package" 
+            && !lib.Name.StartsWith("Microsoft") 
+            && includeAssemblyNamePrefixs.Where(p => lib.Name.StartsWith(p)).Any());
             foreach (var lib in libs)
             {
                 var assembly = AssemblyLoadContext.Default.LoadFromAssemblyName(new AssemblyName(lib.Name));
                 list.Add(assembly);
             }
+
+            list.Add(typeof(AutoModule).GetTypeInfo().Assembly);
             return list;
         }
 
@@ -121,6 +130,7 @@ namespace ApiServer.Framework.Core.AutofacExtras
             base.Load(builder);
             foreach (var c in this.assemblies)
             {
+                logger.Debug($"load assembly:{c.GetName()}");
                 foreach (Type t in c.GetTypes())
                 {
                     //抽象类和接口不注册
@@ -131,6 +141,7 @@ namespace ApiServer.Framework.Core.AutofacExtras
                     if (t.IsAssignableTo<ControllerBase>())
                     {
                         builder.RegisterType(t).InstancePerDependency().PropertiesAutowired();
+                        logger.Debug($"RegisterType 注册Controller :{t.Name}");
                         continue;
                     }
 
@@ -146,6 +157,7 @@ namespace ApiServer.Framework.Core.AutofacExtras
                         }
                         else
                         {
+                            logger.Debug($"RegisterType IDependency :{t.Name}");
                             builder.RegisterType(t).AsSelf().AsImplementedInterfaces().InstancePerDependency().PropertiesAutowired();
                         }
                     }

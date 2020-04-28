@@ -154,7 +154,7 @@ namespace ApiServer.Framework.Sample.App
             });
 
             //查找并加载动态组件
-            List<Assembly> assemblies = AutoModule.FindAssemblys("ApiServer.Framework.Sample.");
+            List<Assembly> assemblies = AutoModule.FindAssemblys("ApiServer.Framework.Sample.Controller");
             foreach (var c in assemblies)
             {
                 mvcBuilder.AddApplicationPart(c);
@@ -187,7 +187,6 @@ namespace ApiServer.Framework.Sample.App
             AutoModule qm = new AutoModule(assemblies);
             //添加依赖注入关系
             builder.RegisterModule(qm);
-            var controllerBaseType = typeof(ControllerBase);
         }
 
 

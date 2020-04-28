@@ -20,5 +20,16 @@ namespace ApiServer.Framework.Sample.Entity.Models
         [Required]
         [Column("password", TypeName = "varchar(255)")]
         public string Password { get; set; }
+        [Column("status", TypeName = "int(10)")]
+        public int Status { get; set; }
+        [Required]
+        [Column("mobile", TypeName = "varchar(20)")]
+        public string Mobile { get; set; }
+        [Required]
+        [Column("title", TypeName = "varchar(20)")]
+        public string Title { get; set; }
+        [Required]
+        [Column("name", TypeName = "varchar(255)")]
+        public string Name { get; set; }
     }
 }

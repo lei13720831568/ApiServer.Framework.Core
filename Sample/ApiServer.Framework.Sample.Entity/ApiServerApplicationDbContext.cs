@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace ApiServer.Framework.Sample.Entity
 {
-    public class ApiServerApplicationDbContext : ApplicationDbContext
+    public partial class ApiServerApplicationDbContext : DbContext
     {
-        public ApiServerApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public ApiServerApplicationDbContext(DbContextOptions<DbContext> options)
             : base(options)
         {
         }

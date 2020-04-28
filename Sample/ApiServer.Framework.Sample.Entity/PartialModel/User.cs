@@ -12,18 +12,6 @@ namespace ApiServer.Framework.Sample.Entity.Models
 {
     public partial class User : TrackableEntity
     {
-        /// <summary>
-        /// 用户角色关联列表
-        /// </summary>
-        /// <value>The user roles.</value>
-        public ICollection<UserRole> UserRoles { get; set; } = new List<UserRole>();
-
-        /// <summary>
-        /// 用户角色列表
-        /// </summary>
-        /// <value>The roles.</value>
-        [NotMapped]
-        public ICollection<Role> Roles => UserRoles.Select(e => e.Role).ToList();
 
     }
 
@@ -31,7 +19,6 @@ namespace ApiServer.Framework.Sample.Entity.Models
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            builder.HasKey(e => e.Id);
         }
     }
 

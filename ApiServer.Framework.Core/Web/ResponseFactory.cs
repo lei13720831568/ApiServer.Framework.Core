@@ -1,4 +1,5 @@
-﻿using ApiServer.Framework.Core.Mvc;
+﻿using ApiServer.Framework.Core.Exceptions;
+using ApiServer.Framework.Core.Mvc;
 using System;
 namespace ApiServer.Framework.Core.Web
 
@@ -19,11 +20,16 @@ namespace ApiServer.Framework.Core.Web
         /// <summary>
         /// 未授权
         /// </summary>
-        public readonly static string Unauthorized = "4000";
+        public readonly static string Unauthorized = "4010";
         /// <summary>
         /// 未知异常
         /// </summary>
         public readonly static string UnhandledException = "5000";
+
+        /// <summary>
+        /// 错误的请求
+        /// </summary>
+        public readonly static string BadRequestException = "4000";
     }
 
     /// <summary>
@@ -96,6 +102,18 @@ namespace ApiServer.Framework.Core.Web
                 Data = null
             };
         }
+
+        public static Response<Object> CreateBadRequestException(Exception ex)
+        {
+            return new Response<Object>
+            {
+                Code = ResponseResult.BadRequestException,
+                Message = $"错误: {ex.Message}",
+                Data = null
+            };
+        }
+
+      
 
     }
 }
