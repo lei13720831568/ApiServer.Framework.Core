@@ -22,13 +22,17 @@ namespace ApiServer.Framework.Core.DB.Query
         /// <param name="disableTracking">关闭实体追踪</param>
         /// <param name="fromCache">是否从缓存获取</param>
         /// <returns></returns>
-        public static TEntity GetOneCheckNull<TEntity>(this DbSet<TEntity> dbSet,string errorMsg, Expression<Func<TEntity, bool>> predicate = null, bool disableTracking = false,bool fromCache = false) where TEntity : EntityBase
+        public static TEntity GetOneCheckNull<TEntity>(this DbSet<TEntity> dbSet,string errorMsg, Expression<Func<TEntity, bool>> predicate = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null, bool disableTracking = false,bool fromCache = false) where TEntity : EntityBase
         {
             IQueryable<TEntity> query = dbSet;
 
             if (disableTracking)
             {
                 query = query.AsNoTracking();
+            }
+            if (include != null)
+            {
+                query = include(query);
             }
 
             if (predicate != null)
@@ -52,13 +56,17 @@ namespace ApiServer.Framework.Core.DB.Query
         /// <param name="disableTracking">关闭实体追踪</param>
         /// <param name="fromCache">是否从缓存获取</param>
         /// <returns></returns>
-        public static TEntity GetOne<TEntity>(this DbSet<TEntity> dbSet, Expression<Func<TEntity, bool>> predicate = null, bool disableTracking = false, bool fromCache = false) where TEntity : EntityBase
+        public static TEntity GetOne<TEntity>(this DbSet<TEntity> dbSet, Expression<Func<TEntity, bool>> predicate = null, Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null, bool disableTracking = false, bool fromCache = false) where TEntity : EntityBase
         {
             IQueryable<TEntity> query = dbSet;
 
             if (disableTracking)
             {
                 query = query.AsNoTracking();
+            }
+            if (include != null)
+            {
+                query = include(query);
             }
 
             if (predicate != null)
@@ -86,7 +94,7 @@ namespace ApiServer.Framework.Core.DB.Query
             {
                 query = query.AsNoTracking();
             }
-
+            
             if (include != null)
             {
                 query = include(query);

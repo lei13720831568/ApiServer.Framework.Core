@@ -80,8 +80,19 @@ namespace ApiServer.Framework.Core.DB.Query
         private Expression<Func<T, bool>> BuildLambda<T>(Type destObjType, PropertyInfo destProp, Object searchObj, PropertyInfo searchProp, Func<Expression, Expression, Expression> func)
         {
             ParameterExpression pe = Expression.Parameter(destObjType, "obj");
+
             var left = Expression.Property(pe, destProp);
-            var right = Expression.Constant(searchProp.GetValue(searchObj));
+
+            //如果是nullable类型则取value
+            if (destProp.PropertyType.IsGenericType && destProp.PropertyType.GetGenericTypeDefinition() == typeof(Nullable<>))
+            {
+                left= Expression.Property( Expression.Property(pe, destProp),"Value");
+            }
+
+            var rightValue = searchProp.GetValue(searchObj);
+            var right = Expression.Constant(rightValue);
+            
+                
             return Expression.Lambda<Func<T, bool>>(func(left, right), pe);
         }
 
@@ -145,9 +156,12 @@ namespace ApiServer.Framework.Core.DB.Query
                 }
             }
 
+            var destBaseType = GetBaseType(destProp);
+            var searchBaseType = GetBaseType(destProp);
+
             //目标存在属性且基类型相等且不为空
             if (destProp != null
-                && destProp.PropertyType.Equals(GetBaseType(searchProp))
+                && destBaseType.Equals(searchBaseType)
                 && CheckIsNull(searchProp, searchObj)
                 )
             {
