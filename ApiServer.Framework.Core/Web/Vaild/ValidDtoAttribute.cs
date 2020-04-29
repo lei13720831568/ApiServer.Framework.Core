@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using ApiServer.Framework.Core.Mvc;
 using ApiServer.Framework.Core.Mvc.Vaild;
 using Microsoft.AspNetCore.Mvc;
@@ -12,7 +13,7 @@ namespace ApiServer.Framework.Core.Web.Vaild
     public class ValidDtoAttribute: ActionFilterAttribute
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:ApiServer.Framework.Core.Mvc.ValidModelAttribute"/> class.
+        /// 构造
         /// </summary>
         public ValidDtoAttribute()
         {
@@ -26,7 +27,10 @@ namespace ApiServer.Framework.Core.Web.Vaild
             base.OnActionExecuting(context);
             if (!context.ModelState.IsValid)
             {
-                context.Result = new ActionResult<BadValidationResponse>(new BadValidationResponse(context.ModelState)).Result;
+
+                //context.Result = new ActionResult<BadValidationResponse>(new BadValidationResponse(context.ModelState)).Result;
+                var rsp = new BadValidationResponse(context.ModelState);
+                context.Result= new BadRequestObjectResult(ResponseFactory.CreateValidFailure(rsp, rsp.Errors.FirstOrDefault().Message));
             }
         }
     }

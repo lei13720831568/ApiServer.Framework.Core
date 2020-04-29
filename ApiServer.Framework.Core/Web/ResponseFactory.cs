@@ -75,6 +75,16 @@ namespace ApiServer.Framework.Core.Web
             };
         }
 
+        public static Response<T> CreateValidFailure<T>(T data,string message)
+        {
+            return new Response<T>
+            {
+                Code = ResponseResult.BadRequestException,
+                Message = message,
+                Data = data
+            };
+        }
+
         /// <summary>
         /// Creates the unauthorized.
         /// </summary>
