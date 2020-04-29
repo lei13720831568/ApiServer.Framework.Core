@@ -24,6 +24,10 @@ namespace ApiServer.Framework.Core.Web.Authentication
                 return Task.CompletedTask;
             }
 
+            if (context.User.Claims.Count() == 0) {
+                return Task.CompletedTask;
+            }
+
             // 以半角逗号分隔的权限满足"需要"的其中之一即可。
             // 分组、角色和权限三者在此也是 Or 的关系，所以是在尽力去找任一匹配。
             var found = string.IsNullOrWhiteSpace(requirement.AuthorizeData.Permissions);

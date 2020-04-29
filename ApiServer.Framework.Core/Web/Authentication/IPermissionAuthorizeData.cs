@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ApiServer.Framework.Core.Web.Authentication
 {
-    public interface IPermissionAuthorizeData
+    public interface IPermissionAuthorizeData: IAuthorizeData
     {
         public string Permissions { get; set; }
     }

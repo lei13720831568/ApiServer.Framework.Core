@@ -6,11 +6,11 @@ using System.Text;
 namespace ApiServer.Framework.Core.Web.Authentication
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = true, Inherited = true)]
-    public class PermissionAttribute : Attribute, IPermissionAuthorizeData, IAuthorizeData
+    public class PermissionAttribute : AuthorizeAttribute, IPermissionAuthorizeData
     {
-        public string Policy { get; set; }
-        public string Roles { get; set; }
-        public string AuthenticationSchemes { get; set; }
+        //public string Policy { get; set; }
+        //public string Roles { get; set; }
+        //public string AuthenticationSchemes { get; set; }
 
         private string _permissions = "Permission:";
 
@@ -28,6 +28,7 @@ namespace ApiServer.Framework.Core.Web.Authentication
         public PermissionAttribute(string permissions="")
         {
             Permissions = permissions;
+            AuthenticationSchemes = HeaderAuthenticationDefaults.AuthenticationSchema;
         }
     }
 }

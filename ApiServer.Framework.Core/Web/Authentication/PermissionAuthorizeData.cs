@@ -8,5 +8,8 @@ namespace ApiServer.Framework.Core.Web.Authentication
     public class PermissionAuthorizeData : IPermissionAuthorizeData
     {
         public string Permissions { get; set; }
+        public string Policy { get; set; }
+        public string Roles { get; set; }
+        public string AuthenticationSchemes { get; set ; }
     }
 }
