@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using System.Text;
 
 namespace ApiServer.Framework.Core.DB.Query
@@ -76,8 +77,18 @@ namespace ApiServer.Framework.Core.DB.Query
                 //查找条件特性,需要是Nullable
                 if (optAttr != null)
                 {
-                    var destProp = destObjType.GetProperty(prop.Name);
                     var optAttrInstance = optAttr as QueryOptAttribute;
+                    PropertyInfo destProp;
+                    var fieldName = optAttrInstance.GetFieldName();
+                    if (string.IsNullOrEmpty(fieldName))
+                    {
+                        destProp = destObjType.GetProperty(prop.Name);
+                    }
+                    else {
+                        destProp = destObjType.GetProperty(fieldName);
+                    }
+                   // var destProp = destObjType.GetProperty(prop.Name);
+                   // var optAttrInstance = optAttr as QueryOptAttribute;
                     var p = optAttrInstance.CheckAndBuildExpression<T>(destObjType, destProp, prop, queryObj);
                     if (p != null)
                     {

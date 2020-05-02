@@ -13,14 +13,19 @@ namespace ApiServer.Framework.Core.DB.Query
     public class QueryOptAttribute : Attribute
     {
         private QueryOptEnum Operation { get; set; }
-
+        private string _fieldName;
         /// <summary>
         /// 构造
         /// </summary>
         /// <param name="opt"></param>
-        public QueryOptAttribute(QueryOptEnum opt = QueryOptEnum.Equal)
+        public QueryOptAttribute(QueryOptEnum opt = QueryOptEnum.Equal, string fieldName = "")
         {
             Operation = opt;
+            _fieldName = fieldName;
+        }
+
+        public string GetFieldName() {
+            return _fieldName;
         }
 
         private static readonly MethodInfo containsMethod = typeof(string).GetMethod("Contains", new Type[] { typeof(string) });
