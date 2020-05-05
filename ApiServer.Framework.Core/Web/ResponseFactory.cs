@@ -30,6 +30,11 @@ namespace ApiServer.Framework.Core.Web
         /// 错误的请求
         /// </summary>
         public readonly static string BadRequestException = "4000";
+
+        /// <summary>
+        /// 用户拥有多个身份
+        /// </summary>
+        public readonly static string MuliteIdentity = "6001";
     }
 
     /// <summary>
@@ -65,11 +70,14 @@ namespace ApiServer.Framework.Core.Web
         /// Creates the failure.
         /// </summary>
         /// <returns>The failure.</returns>
-        public static Response<Object> CreateFailure()
+        public static Response<Object> CreateFailure(string code)
         {
+            if (string.IsNullOrWhiteSpace(code)) {
+                code = ResponseResult.Failure;
+            }
             return new Response<Object>
             {
-                Code = ResponseResult.Failure,
+                Code = code,
                 Message = "failure",
                 Data = null
             };

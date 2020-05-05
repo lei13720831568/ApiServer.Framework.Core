@@ -87,6 +87,7 @@ namespace ApiServer.Framework.Core.DB.Query
                     else {
                         destProp = destObjType.GetProperty(fieldName);
                     }
+                    if (destProp == null) continue;
                    // var destProp = destObjType.GetProperty(prop.Name);
                    // var optAttrInstance = optAttr as QueryOptAttribute;
                     var p = optAttrInstance.CheckAndBuildExpression<T>(destObjType, destProp, prop, queryObj);
