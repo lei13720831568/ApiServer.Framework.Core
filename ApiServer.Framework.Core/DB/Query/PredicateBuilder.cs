@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ApiServer.Framework.Core.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -87,7 +88,11 @@ namespace ApiServer.Framework.Core.DB.Query
                     else {
                         destProp = destObjType.GetProperty(fieldName);
                     }
-                    if (destProp == null) continue;
+
+                    if (destProp == null) {
+                        throw new Exception($"QueryOpt 无法匹配到目标字段 {prop.Name} {fieldName}");
+                    };
+
                    // var destProp = destObjType.GetProperty(prop.Name);
                    // var optAttrInstance = optAttr as QueryOptAttribute;
                     var p = optAttrInstance.CheckAndBuildExpression<T>(destObjType, destProp, prop, queryObj);

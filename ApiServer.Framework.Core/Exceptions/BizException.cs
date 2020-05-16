@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ApiServer.Framework.Core.Web;
+using System;
 namespace ApiServer.Framework.Core.Exceptions
 {
     /// <summary>
@@ -13,11 +14,20 @@ namespace ApiServer.Framework.Core.Exceptions
         public BizException(string msg):base(msg)
         {
             Id = System.Guid.NewGuid().ToString("N");
+            ReturnCode = ResponseResult.UnhandledException;
+        }
+
+        public BizException(string msg,string returnCode) : base(msg)
+        {
+            Id = System.Guid.NewGuid().ToString("N");
+            ReturnCode = returnCode;
         }
 
         /// <summary>
         /// 异常id
         /// </summary>
         public String Id { get; set; }
+
+        public String ReturnCode { get; set; }
     }
 }

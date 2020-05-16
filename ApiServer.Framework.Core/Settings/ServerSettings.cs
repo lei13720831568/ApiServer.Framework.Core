@@ -20,5 +20,15 @@ namespace ApiServer.Framework.Core.Settings
         /// </summary>
         /// <value>The db connect strings.</value>
         public Dictionary<String,String> ConnectionStrings { get; set; }
+
+        /// <summary>
+        /// 进程id
+        /// </summary>
+        public long WorkerId { get; set; }
+
+        /// <summary>
+        /// 数据中心id
+        /// </summary>
+        public long DataCenterId { get; set; }
     }
 }

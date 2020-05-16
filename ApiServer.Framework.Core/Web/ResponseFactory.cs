@@ -121,6 +121,16 @@ namespace ApiServer.Framework.Core.Web
             };
         }
 
+        public static Response<Object> CreateBizException(BizException ex)
+        {
+            return new Response<Object>
+            {
+                Code =ex.ReturnCode,
+                Message = $"错误: {ex.Message}",
+                Data = null
+            };
+        }
+
         public static Response<Object> CreateBadRequestException(Exception ex)
         {
             return new Response<Object>

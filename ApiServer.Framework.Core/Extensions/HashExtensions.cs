@@ -1,6 +1,7 @@
 ﻿using ApiServer.Framework.Core.Algorithm;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -121,7 +122,24 @@ namespace ApiServer.Framework.Core
         public static string Md5(this string input, string salt="") {
             using (var md5 = MD5.Create())
             {
-                var result = md5.ComputeHash(Encoding.ASCII.GetBytes(input));
+                var result = md5.ComputeHash(Encoding.ASCII.GetBytes(input+ salt));
+                var strResult = BitConverter.ToString(result);
+                return strResult.Replace("-", "").ToLower();
+            }
+        }
+
+        /// <summary>
+        /// md5
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="salt"></param>
+        /// <returns></returns>
+        public static string Md5(this byte[] input, string salt = "")
+        {
+            using (var md5 = MD5.Create())
+            {
+                var inputSalt = input.Concat(Encoding.ASCII.GetBytes(salt)).ToArray();
+                var result = md5.ComputeHash(inputSalt);
                 var strResult = BitConverter.ToString(result);
                 return strResult.Replace("-", "").ToLower();
             }

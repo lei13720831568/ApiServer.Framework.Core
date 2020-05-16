@@ -58,7 +58,7 @@ namespace ApiServer.Framework.Core.Web.Middleware
             else  if (exception is BizException)
             {
                 msg = $"错误:{exception}";
-                result = ResponseFactory.CreateUnhandledException(exception);
+                result = ResponseFactory.CreateBizException(exception as BizException);
                 logger.Info(msg);
             }
             else
