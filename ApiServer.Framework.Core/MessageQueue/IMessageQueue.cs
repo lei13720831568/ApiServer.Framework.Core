@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 namespace ApiServer.Framework.Core.MessageQueue
 {
     /// <summary>
@@ -19,13 +22,14 @@ namespace ApiServer.Framework.Core.MessageQueue
         /// <param name="queueName">队列名称</param>
         /// <param name="waitSeconds">长轮询时间30秒</param>
         /// <returns></returns>
-        public Message Receive(string queueName, int waitSeconds=30);
+        public  Task<List<Message>> Receive(string queueName, int count = 5, int waitSeconds=30);
 
         /// <summary>
         /// 确认消息已被消费,确认后消息将被删除
         /// </summary>
-        /// <param name="msgId"></param>
-        public void Ack(string msgHandle);
+        /// <param name="msgHandle"></param>\
+        /// <param name="result">true确认 false回退</param>
+        public void Ack(string msgHandle,bool result);
 
 
     }

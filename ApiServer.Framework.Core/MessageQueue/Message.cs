@@ -3,11 +3,6 @@ namespace ApiServer.Framework.Core.MessageQueue
 {
     public class Message
     {
-        public Message(string msgBody)
-        {
-            MsgBody = msgBody;
-        }
-
         /// <summary>
         /// 消息id,一个队列内唯一
         /// </summary>
