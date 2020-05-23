@@ -15,12 +15,20 @@ namespace ApiServer.Framework.Core.Exceptions
         {
             Id = System.Guid.NewGuid().ToString("N");
             ReturnCode = ResponseResult.UnhandledException;
+            Data = null;
         }
 
         public BizException(string msg,string returnCode) : base(msg)
         {
             Id = System.Guid.NewGuid().ToString("N");
             ReturnCode = returnCode;
+            Data = null;
+        }
+
+        public BizException(string msg, string returnCode,Object data) : base(msg) {
+            Id = System.Guid.NewGuid().ToString("N");
+            ReturnCode = returnCode;
+            Data = data;
         }
 
         /// <summary>
@@ -29,5 +37,7 @@ namespace ApiServer.Framework.Core.Exceptions
         public String Id { get; set; }
 
         public String ReturnCode { get; set; }
+
+        public Object Data { get; set; }
     }
 }
