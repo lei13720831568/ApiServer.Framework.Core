@@ -125,9 +125,9 @@ namespace ApiServer.Framework.Core.Web
         {
             return new Response<Object>
             {
-                Code =ex.ReturnCode,
+                Code = ex.ReturnCode,
                 Message = $"错误: {ex.Message}",
-                Data = null
+                Data = ex.Data
             };
         }
 
