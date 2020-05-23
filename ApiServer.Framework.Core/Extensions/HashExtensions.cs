@@ -52,6 +52,39 @@ namespace ApiServer.Framework.Core
         }
 
         /// <summary>
+        /// Creates a SHA1 hash of the specified input.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns>A hash</returns>
+        public static string Sha1(this string input)
+        {
+            if (String.IsNullOrEmpty(input)) return string.Empty;
+
+            using (var sha = SHA1.Create())
+            {
+                var bytes = Encoding.UTF8.GetBytes(input);
+                var hash = sha.ComputeHash(bytes);
+                return Convert.ToBase64String(hash);
+            }
+        }
+        /// <summary>
+        /// Creates a SHA256 hash of the specified input.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns>A hash.</returns>
+        public static byte[] Sha1(this byte[] input)
+        {
+            if (input == null)
+            {
+                return null;
+            }
+            using (var sha = SHA1.Create())
+            {
+                return sha.ComputeHash(input);
+            }
+        }
+
+        /// <summary>
         /// Creates a SHA256 hash of the specified input.
         /// </summary>
         /// <param name="input">The input.</param>
