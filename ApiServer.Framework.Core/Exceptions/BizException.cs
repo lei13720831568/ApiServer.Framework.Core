@@ -38,6 +38,6 @@ namespace ApiServer.Framework.Core.Exceptions
 
         public String ReturnCode { get; set; }
 
-        public Object Data { get; set; }
+        public object Data { get; set; }
     }
 }
