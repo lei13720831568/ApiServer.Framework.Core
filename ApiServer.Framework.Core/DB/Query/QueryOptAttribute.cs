@@ -119,6 +119,9 @@ namespace ApiServer.Framework.Core.DB.Query
                     result = Expression.LessThanOrEqual(left, right);
                     break;
                 case QueryOptEnum.GreaterThan:
+                    result = Expression.GreaterThan(left, right);
+                    break;
+                case QueryOptEnum.GreaterThenOrEqual:
                     result = Expression.GreaterThanOrEqual(left, right);
                     break;
                 case QueryOptEnum.Contains:
