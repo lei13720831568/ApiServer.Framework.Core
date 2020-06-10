@@ -114,15 +114,42 @@ namespace ApiServer.Framework.Core.DB.Query
             if (orderBys != null && orderBys.Count > 0) {
                 foreach (var orderby in orderBys)
                 {
-                    var isAscending = orderby.OrderType == 1;
+                    //var isAscending = orderby.OrderType == 1;
+                    //var pi = typeof(TEntity).GetProperty(orderby.Field);
+                    //if (pi != null)
+                    //    query = isAscending
+                    //        ? query.OrderBy(a => pi.GetValue(a, null))
+                    //        : query.OrderByDescending(a => pi.GetValue(a, null));
+
                     var pi = typeof(TEntity).GetProperty(orderby.Field);
-                    if (pi != null)
-                        query = isAscending
-                            ? query.OrderBy(a => pi.GetValue(a, null))
-                            : query.OrderByDescending(a => pi.GetValue(a, null));
+                    if (pi == null) continue;
+                    if (orderby.OrderType > 0)
+                        query = query.OrderBy(orderby.Field, orderby.OrderType == 1);
                 }
             }
             return query;
+        }
+
+
+        public static IQueryable<T> OrderBy<T>(this IQueryable<T> source, string columnName, bool isAscending = true)
+        {
+            if (String.IsNullOrEmpty(columnName))
+            {
+                return source;
+            }
+
+            ParameterExpression parameter = Expression.Parameter(source.ElementType, "");
+
+            MemberExpression property = Expression.Property(parameter, columnName);
+            LambdaExpression lambda = Expression.Lambda(property, parameter);
+
+            string methodName = isAscending ? "OrderBy" : "OrderByDescending";
+
+            Expression methodCallExpression = Expression.Call(typeof(Queryable), methodName,
+                                  new Type[] { source.ElementType, property.Type },
+                                  source.Expression, Expression.Quote(lambda));
+
+            return source.Provider.CreateQuery<T>(methodCallExpression);
         }
 
         public static IPagedList<TEntity> GetPagedList<TEntity>(this DbSet<TEntity> dbSet,

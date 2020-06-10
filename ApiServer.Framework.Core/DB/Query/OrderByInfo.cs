@@ -8,9 +8,9 @@ namespace ApiServer.Framework.Core.DB.Query
         private string field = "";
 
         /// <summary>
-        /// 1= 正序 2=倒序
+        /// 0=无排序 1= 正序 2=倒序
         /// </summary>
-        public int OrderType { get; set; } = 1;
+        public int OrderType { get; set; }
 
         /// <summary>
         /// 字段名
