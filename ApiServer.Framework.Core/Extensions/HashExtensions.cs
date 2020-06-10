@@ -64,7 +64,9 @@ namespace ApiServer.Framework.Core
             {
                 var bytes = Encoding.UTF8.GetBytes(input);
                 var hash = sha.ComputeHash(bytes);
-                return Convert.ToBase64String(hash);
+                var strResult = BitConverter.ToString(hash);
+
+                return strResult.Replace("-", "").ToLower();
             }
         }
         /// <summary>
@@ -97,7 +99,9 @@ namespace ApiServer.Framework.Core
             {
                 var bytes = Encoding.UTF8.GetBytes(input);
                 var hash = sha.ComputeHash(bytes);
-                return Convert.ToBase64String(hash);
+                var strResult = BitConverter.ToString(hash);
+
+                return strResult.Replace("-", "").ToLower();
             }
         }
         /// <summary>
@@ -128,7 +132,9 @@ namespace ApiServer.Framework.Core
             {
                 var bytes = Encoding.UTF8.GetBytes(input);
                 var hash = sha.ComputeHash(bytes);
-                return Convert.ToBase64String(hash);
+                var strResult = BitConverter.ToString(hash);
+
+                return strResult.Replace("-", "").ToLower();
             }
         }
 
