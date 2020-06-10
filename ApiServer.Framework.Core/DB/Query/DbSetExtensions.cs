@@ -77,24 +77,20 @@ namespace ApiServer.Framework.Core.DB.Query
             return result;
         }
 
-
-        public static IPagedList<TEntity> GetPagedList<TEntity>(this DbSet<TEntity> dbSet,
+        public static IQueryable<TEntity> BuildQuery<TEntity>(this DbSet<TEntity> dbSet,
             Expression<Func<TEntity, bool>> predicate = null,
             Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
-            int pageIndex = 0,
-            int pageSize = 20,
-            bool disableTracking = true,
+            List<OrderByInfo> orderBys=null, bool disableTracking = true,
             bool ignoreQueryFilters = false) where TEntity : EntityBase
         {
-
             IQueryable<TEntity> query = dbSet;
 
             if (disableTracking)
             {
                 query = query.AsNoTracking();
             }
-            
+
             if (include != null)
             {
                 query = include(query);
@@ -112,14 +108,37 @@ namespace ApiServer.Framework.Core.DB.Query
 
             if (orderBy != null)
             {
-                return orderBy(query).ToPagedList(pageIndex, pageSize);
-            }
-            else
-            {
-                return query.ToPagedList(pageIndex, pageSize);
+                query = orderBy(query);
             }
 
+            if (orderBys != null && orderBys.Count > 0) {
+                foreach (var orderby in orderBys)
+                {
+                    var isAscending = orderby.OrderType == 1;
+                    var pi = typeof(TEntity).GetProperty(orderby.Field);
+                    if (pi != null)
+                        query = isAscending
+                            ? query.OrderBy(a => pi.GetValue(a, null))
+                            : query.OrderByDescending(a => pi.GetValue(a, null));
+                }
+            }
+            return query;
         }
+
+        public static IPagedList<TEntity> GetPagedList<TEntity>(this DbSet<TEntity> dbSet,
+            Expression<Func<TEntity, bool>> predicate = null,
+            Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>> orderBy = null,
+            Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> include = null,
+            int pageIndex = 0,
+            int pageSize = 20,
+            bool disableTracking = true,
+            bool ignoreQueryFilters = false) where TEntity : EntityBase
+        {
+
+            var query = dbSet.BuildQuery<TEntity>(predicate, orderBy, include, null, disableTracking, ignoreQueryFilters);
+            return query.ToPagedList(pageIndex, pageSize);
+        }
+
 
 
 
@@ -132,36 +151,9 @@ namespace ApiServer.Framework.Core.DB.Query
                                                          bool disableTracking = true,
                                                          bool ignoreQueryFilters = false) where TEntity : EntityBase
         {
-            IQueryable<TEntity> query = dbSet;
 
-            if (disableTracking)
-            {
-                query = query.AsNoTracking();
-            }
-
-            if (include != null)
-            {
-                query = include(query);
-            }
-
-            if (predicate != null)
-            {
-                query = query.Where(predicate);
-            }
-
-            if (ignoreQueryFilters)
-            {
-                query = query.IgnoreQueryFilters();
-            }
-
-            if (orderBy != null)
-            {
-                return orderBy(query).Select(selector).ToPagedList(pageIndex, pageSize);
-            }
-            else
-            {
-                return query.Select(selector).ToPagedList(pageIndex, pageSize);
-            }
+            var query = dbSet.BuildQuery<TEntity>(predicate, orderBy, include, null, disableTracking, ignoreQueryFilters);
+            return query.Select(selector).ToPagedList(pageIndex, pageSize);
         }
 
         public static  IPagedList<T> ToPagedList<T>(this IQueryable<T> source, int pageIndex, int pageSize, int indexFrom = 0)
