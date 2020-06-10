@@ -6,7 +6,6 @@ namespace ApiServer.Framework.Core.DB.Query
     public class OrderByInfo
     {
         private string field = "";
-        private TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
 
         /// <summary>
         /// 1= 正序 2=倒序
@@ -16,7 +15,15 @@ namespace ApiServer.Framework.Core.DB.Query
         /// <summary>
         /// 字段名
         /// </summary>
-        public string Field { get => field; set => field = myTI.ToTitleCase(value); }
+        public string Field { get => field; set{
+                if (value != null ) {
+                    if (value.Length > 2)
+                        field = value.Substring(0, 1).ToUpper() + value.Substring(1);
+                    else field = value.ToUpper();
+                }
+                
+            }
+        }
 
     }
 }
