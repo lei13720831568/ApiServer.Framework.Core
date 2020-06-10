@@ -10,9 +10,9 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Description>Web Api的一些常用封装</Description>
-    <Version>1.1.14</Version>
-    <AssemblyVersion>1.1.14.0</AssemblyVersion>
-    <FileVersion>1.1.14.0</FileVersion>
+    <Version>1.1.15</Version>
+    <AssemblyVersion>1.1.15.0</AssemblyVersion>
+    <FileVersion>1.1.15.0</FileVersion>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
