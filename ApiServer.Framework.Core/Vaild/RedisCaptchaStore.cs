@@ -20,19 +20,21 @@ namespace ApiServer.Framework.Core.Vaild
             return;
         }
 
-        public (bool, long) Store(Captcha captcha, int timeLife, int limitKeyTimeLife = 0)
+        public (bool, long) Store(Captcha captcha, int timeLife, int limitKeyTimeLife = 0,int count=1)
         {
             if (!string.IsNullOrWhiteSpace(captcha.LimitKey))
             {
-
+                int limitCount = RedisHelper.Get<int>(captcha.GetLimitKey());
                 var ttl = RedisHelper.Ttl(captcha.GetLimitKey());
-                if (ttl > 0)
-                {
+
+                if (limitCount >= count && ttl>0) {
                     return (false, ttl);
                 }
                 else {
                     var pipe = RedisHelper.StartPipe();
-                    pipe.Set(captcha.GetLimitKey(), captcha.Id, limitKeyTimeLife);
+                    pipe.IncrBy(captcha.GetLimitKey());
+                    pipe.Expire(captcha.GetLimitKey(), limitKeyTimeLife);
+
                     pipe.Set(captcha.GetKey(), captcha, timeLife);
                     pipe.EndPipe();
                     return (true, timeLife);
@@ -53,7 +55,8 @@ namespace ApiServer.Framework.Core.Vaild
             {
                 var pipe = RedisHelper.StartPipe();
                 pipe.Del(Captcha.GetKey(id, type));
-                if (!string.IsNullOrWhiteSpace(captcha.LimitKey)) pipe.Del(captcha.GetLimitKey());
+                //验证成功删除约束
+                if (!string.IsNullOrWhiteSpace(captcha.LimitKey) && captcha.Code == input) pipe.Del(captcha.GetLimitKey());
                 pipe.EndPipe();
                 return (captcha.Code == input,captcha.BizId);
             }

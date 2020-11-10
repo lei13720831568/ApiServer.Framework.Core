@@ -27,19 +27,26 @@ namespace ApiServer.Framework.Core.WorkerService
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             this.ConfigWorker(stoppingToken);
+            foreach (var task in works) { 
+                task.Start();
+            }
+
             await Task.WhenAll(works.ToArray());
         }
 
-        private async Task CreateWorker<T>(CancellationToken stoppingToken) where T : IWorker
+        private Task CreateWorker<T>(CancellationToken stoppingToken) where T : IWorker
         {
-
-            using (var scope = scopeFactory.CreateScope())
+            return new Task(async () =>
             {
-                var scopedProcessingService =
-                    scope.ServiceProvider
-                        .GetRequiredService<T>();
-                await scopedProcessingService.DoWork(stoppingToken);
-            }
+                using (var scope = scopeFactory.CreateScope())
+                {
+                    var scopedProcessingService =
+                        scope.ServiceProvider
+                            .GetRequiredService<T>();
+                    await scopedProcessingService.DoWork(stoppingToken);
+                }
+            });
+
         }
 
     }

@@ -17,8 +17,9 @@ namespace ApiServer.Framework.Core.Vaild
         /// <param name="timeLife">验证码生命周期</param>
         /// <param name="limitKey">验证码约束key</param>
         /// <param name="limitTimeLife">验证码约束key存活周期</param>
+        /// <param name="count">存活数量</param>
         /// <returns>结果</returns>
-        (bool, long) Store(Captcha captcha, int timeLife, int limitKeyTimeLife= 0);
+        (bool, long) Store(Captcha captcha, int timeLife, int limitKeyTimeLife= 0,int count=1);
 
         /// <summary>
         /// 验证

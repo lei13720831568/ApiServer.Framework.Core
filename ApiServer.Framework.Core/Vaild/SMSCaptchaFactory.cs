@@ -43,7 +43,7 @@ namespace ApiServer.Framework.Core.Vaild
                 Type = "sms",
                 BizId = bizId
             };
-            (var result,_) =CaptchaStore.Store(captcha, 30 * 60, 90);
+            (var result,_) =CaptchaStore.Store(captcha, 30 * 60, 90,3);
             if (result == false) return null;
 
             return captcha;

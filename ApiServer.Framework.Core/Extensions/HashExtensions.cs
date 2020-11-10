@@ -195,5 +195,14 @@ namespace ApiServer.Framework.Core
             var strResult = BitConverter.ToString(result).ToLower();
             return strResult.Replace("-", "");
         }
+
+        public static string HmacSha1(this string input, string key)
+        {
+            byte[] keyBytes = Encoding.UTF8.GetBytes(key);
+            byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+            HMACSHA1 hmac = new HMACSHA1(keyBytes);
+            byte[] hashBytes = hmac.ComputeHash(inputBytes);
+            return Convert.ToBase64String(hashBytes);
+        }
     }
 }

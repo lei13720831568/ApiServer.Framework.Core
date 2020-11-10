@@ -27,9 +27,10 @@ namespace ApiServer.Framework.Core.MessageQueue
         /// <summary>
         /// 确认消息已被消费,确认后消息将被删除
         /// </summary>
-        /// <param name="msgHandle"></param>\
+        /// <param name="msgHandle"></param>
+        /// <param name="queueName"></param>
         /// <param name="result">true确认 false回退</param>
-        public void Ack(string msgHandle,bool result);
+        public void Ack(string queueName,string msgHandle,bool result);
 
 
     }
