@@ -12,6 +12,9 @@ using Autofac.Core.Registration;
 using Microsoft.Extensions.DependencyModel;
 using System.Runtime.Loader;
 using System.Runtime.CompilerServices;
+using ApiServer.Framework.Core.DB.Tran;
+using Autofac.Extras.DynamicProxy;
+using ApiServer.Framework.Core.Context;
 
 namespace ApiServer.Framework.Core.AutofacExtras
 {
@@ -64,6 +67,8 @@ namespace ApiServer.Framework.Core.AutofacExtras
         /// <param name="registration"></param>
         protected override void AttachToComponentRegistration(IComponentRegistryBuilder componentRegistry, IComponentRegistration registration)
         {
+            
+
             // Handle constructor parameters.
             registration.Preparing += OnComponentPreparing;
 
@@ -128,6 +133,9 @@ namespace ApiServer.Framework.Core.AutofacExtras
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
+            //注入事务管理切面
+            builder.RegisterType<TranInterceptor>();
+
             foreach (var c in this.assemblies)
             {
                 logger.Debug($"load assembly:{c.GetName()}");
@@ -159,10 +167,24 @@ namespace ApiServer.Framework.Core.AutofacExtras
                         {
                             logger.Debug($"RegisterType IDependency :{t.Name}");
                             builder.RegisterType(t).AsSelf().AsImplementedInterfaces().InstancePerDependency().PropertiesAutowired();
+                            continue;
                         }
+
                     }
 
+                    //服务层注册
+                    if (t.IsAssignableTo<IService>())
+                    {
+                        logger.Debug($"RegisterType IService :{t.Name} {t.FullName}");
+                        builder.RegisterType(t).AsSelf().AsImplementedInterfaces().InstancePerLifetimeScope()
+                            .EnableClassInterceptors()
+                            .InterceptedBy(typeof(TranInterceptor));
+
+                    }
+
+
                 }
+
             }
         }
     }

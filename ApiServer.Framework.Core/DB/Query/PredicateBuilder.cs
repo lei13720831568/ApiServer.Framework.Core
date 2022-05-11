@@ -8,11 +8,13 @@ using System.Text;
 
 namespace ApiServer.Framework.Core.DB.Query
 {
-    /// <summary>
-    /// Predicate builder.
-    /// </summary>
-    public static class PredicateBuilder
-    {
+
+
+        /// <summary>
+        /// Predicate builder.
+        /// </summary>
+        public static class PredicateBuilder
+        {
         /// <summary>
         /// True this instance.
         /// </summary>
@@ -106,6 +108,8 @@ namespace ApiServer.Framework.Core.DB.Query
 
             return predicate;
         }
+
+
 
     }
 }

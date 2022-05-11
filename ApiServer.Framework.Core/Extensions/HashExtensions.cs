@@ -26,7 +26,7 @@ namespace ApiServer.Framework.Core
             {
                 var bytes = Encoding.UTF8.GetBytes(input);
                 var hash = sha.ComputeHash(bytes);
-                return Convert.ToBase64String(hash);
+                return System.Convert.ToBase64String(hash);
             }
         }
 
@@ -144,12 +144,12 @@ namespace ApiServer.Framework.Core
         /// <param name="input"></param>
         /// <returns></returns>
         public static string Base64(this string input) {
-            return Convert.ToBase64String(Encoding.UTF8.GetBytes(input));
+            return System.Convert.ToBase64String(Encoding.UTF8.GetBytes(input));
         }
 
         public static string Base64(this byte[] input)
         {
-            return Convert.ToBase64String(input);
+            return System.Convert.ToBase64String(input);
         }
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace ApiServer.Framework.Core
             byte[] inputBytes = Encoding.UTF8.GetBytes(input);
             HMACSHA1 hmac = new HMACSHA1(keyBytes);
             byte[] hashBytes = hmac.ComputeHash(inputBytes);
-            return Convert.ToBase64String(hashBytes);
+            return System.Convert.ToBase64String(hashBytes);
         }
     }
 }

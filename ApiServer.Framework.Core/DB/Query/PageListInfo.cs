@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace ApiServer.Framework.Core.DB.Query
 {
@@ -27,6 +28,15 @@ namespace ApiServer.Framework.Core.DB.Query
         /// 第N页
         /// </summary>
         /// <value>The index of the page.</value>
+        
         public int PageIndex { get; set; }
+
+        [JsonIgnore]
+        public int SkipCount
+        {
+            get {
+                return PageIndex * PageSize;
+            }
+        }
     }
 }
