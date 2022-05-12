@@ -30,5 +30,10 @@ namespace ApiServer.Framework.Core.Settings
         /// 数据中心id
         /// </summary>
         public long DataCenterId { get; set; }
+
+        /// <summary>
+        /// 数据库池大小
+        /// </summary>
+        public int? DbPoolSize { get; set; }
     }
 }
