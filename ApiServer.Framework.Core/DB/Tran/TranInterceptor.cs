@@ -7,13 +7,18 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using NLog;
 
 namespace ApiServer.Framework.Core.DB.Tran
 {
+
+
     public class TranInterceptor : IInterceptor
     {
 
         private readonly DbContext dbContext;
+
+        private ILogger logger = LogManager.GetCurrentClassLogger();
 
         public TranInterceptor(DbContext dbContext)
         {
@@ -28,13 +33,15 @@ namespace ApiServer.Framework.Core.DB.Tran
                 methodInfo = invocation.Method;
             }
 
-            if (IsAsyncMethod(methodInfo)) {
-                throw new Exception("事务不能是异步方法。");
-            }
-
             TransactionAttribute transactionAttr =
                 methodInfo.GetCustomAttributes<TransactionAttribute>(true).FirstOrDefault();
             if (transactionAttr != null) {
+
+                if (IsAsyncMethod(methodInfo))
+                {
+                    throw new Exception("事务处理不能是异步方法。");
+                }
+                logger.Debug("Transaction Intercept");
                 if (dbContext.Database.CurrentTransaction == null)
                 {
 
@@ -42,12 +49,18 @@ namespace ApiServer.Framework.Core.DB.Tran
                     {
                         try
                         {
+                            logger.Debug("begin Transaction");
                             invocation.Proceed();
                             transaction.Commit();
+                            if (transactionAttr.AfterCommitEventHandle != null) {
+                                transactionAttr.AfterCommitEventHandle(invocation.Arguments);
+                            }
+                            logger.Debug("commited Transaction");
                         }
                         catch (Exception ex)
                         {
                             transaction.Rollback();
+                            logger.Debug("rollback Transaction");
                             throw ex;
                         }
                     }

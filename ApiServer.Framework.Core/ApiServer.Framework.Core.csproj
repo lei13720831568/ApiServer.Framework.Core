@@ -10,9 +10,9 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Description>Web Api的一些常用封装</Description>
-    <Version>1.2.18</Version>
-    <AssemblyVersion>1.2.18.0</AssemblyVersion>
-    <FileVersion>1.2.18.0</FileVersion>
+    <Version>1.2.23</Version>
+    <AssemblyVersion>1.2.23.0</AssemblyVersion>
+    <FileVersion>1.2.23.0</FileVersion>
     <PackageProjectUrl>https://github.com/lei13720831568/ApiServer.Framework.Core</PackageProjectUrl>
   </PropertyGroup>
 

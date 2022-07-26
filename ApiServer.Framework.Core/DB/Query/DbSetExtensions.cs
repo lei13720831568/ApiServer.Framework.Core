@@ -206,5 +206,17 @@ namespace ApiServer.Framework.Core.DB.Query
 
             return pagedList;
         }
+
+        public static TSource FirstOrThrow<TSource>(this IQueryable<TSource> source, Expression<Func<TSource, bool>> predicate,string throwMsg)
+        {
+            var obj = source.FirstOrDefault(predicate);
+            Assert.NotNull(obj, throwMsg);
+            return obj;
+        }
+
+        public static TEntity FirstOrThrow<TEntity, TProperty>(this IIncludableQueryable<TEntity, TProperty> source, Expression<Func<TEntity, bool>> predicate, string throwMsg)
+        {
+            return (source as IQueryable<TEntity>).FirstOrThrow(predicate, throwMsg);
+        }
     }
 }
